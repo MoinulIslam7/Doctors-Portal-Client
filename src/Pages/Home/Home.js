@@ -12,7 +12,8 @@ const Home = () => {
     return (
         <section >
             <div style={{
-                background: `url(${bg})`
+                background: `url(${bg})`,
+                backgroundSize: "contain"
             }} className='mx-5'>
                 <Banner></Banner>
                 <InfoCards></InfoCards>
