@@ -1,13 +1,15 @@
 import { setDefaultOptions } from 'date-fns';
 import { format } from 'date-fns/esm';
-import React from 'react';
+import React, { useContext } from 'react';
+import toast from 'react-hot-toast';
+import { AuthContext } from '../../Context/AuthProvider';
 
 const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
     const date = format(selectedDate, 'PP')
     const { name, slots } = treatment;
     // treatment is appointment options just diffrent name
 
-
+    const { user } = useContext(AuthContext);
 
     const handleBooking = event => {
         event.preventDefault();
@@ -28,7 +30,22 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
         // todo: send data to the server
         // and once data is saved then close the modal and display success toast
         console.log(booking);
-        setTreatment(null);
+        fetch('http://localhost:5000/bookings', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(booking)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                if (data.acknowledged) {
+                    setTreatment(null);
+                    toast.success('Booking Confirmed!!')
+                }
+            })
+
     }
     return (
         <>
@@ -40,18 +57,18 @@ const BookingModal = ({ treatment, selectedDate, setTreatment }) => {
                     <form onSubmit={handleBooking} className='grid grid-cols-1 gap-3 mt-10'>
                         <input disabled type="text" value={date} className="input w-full input-bordered " />
                         <select name='slot' className="select select-bordered w-full">
-                            
+
                             {
-                                slots.map((slot, i) => <option 
-                                key={i} 
-                                value={slot}>{slot}</option>)
+                                slots.map((slot, i) => <option
+                                    key={i}
+                                    value={slot}>{slot}</option>)
                             }
                         </select>
-                        <input name='name' type="text" placeholder="Your Name" className="input w-full input-bordered " />
-                        <input name='email' type="email" placeholder="Email Address" className="input w-full input-bordered " />
+                        <input defaultValue={user?.displayName} disabled name='name' type="text" placeholder="Your Name" className="input w-full input-bordered " />
+                        <input defaultValue={user?.email} disabled name='email' type="email" placeholder="Email Address" className="input w-full input-bordered " />
                         <input name='phone' type="text" placeholder="Phone" className="input w-full input-bordered " />
                         <br />
-                        <input className=' btn btn-accent w-full  max-w-sm' type="Submit" value="Submit" />
+                        <input className=' btn btn-accent w-full ' type="Submit" value="Submit" />
                     </form>
                 </div>
             </div>
