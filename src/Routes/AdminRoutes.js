@@ -1,17 +1,20 @@
 import React, { useContext } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../Context/AuthProvider';
+import UseAdmin from '../Hooks/UseAdmin';
+import Loading from '../Pages/Shared/Loading/Loading';
 
-const PrivateRoutes = ({children}) => {
+const AdminRoutes = ({children}) => {
     const {user, loading} = useContext(AuthContext);
+    const [isAdmin, isAdminLoading] =  UseAdmin(user?.email);
     const location = useLocation();
-    if(loading){
-       return <button className="mx-96 w-80 mt-32 btn btn-square loading">Loading...</button>
+    if(loading || isAdminLoading){
+       return <Loading></Loading>
     }
-    if(user){
+    if(isAdmin && user){
         return children;
     }
     return <Navigate to="/login" state={{from: location}} replace></Navigate>
 };
 
-export default PrivateRoutes;
+export default AdminRoutes;

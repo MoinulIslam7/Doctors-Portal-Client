@@ -7,6 +7,7 @@ import MyAppointment from "../Pages/Dashboard/MyAppointment";
 import Home from "../Pages/Home/Home";
 import Login from "../Pages/Login/Login";
 import SignUp from "../Pages/SignUp/SignUp";
+import AdminRoutes from "./AdminRoutes";
 import PrivateRoutes from "./PrivateRoutes";
 
 const routes = createBrowserRouter([
@@ -43,7 +44,7 @@ const routes = createBrowserRouter([
             },
             {
                 path: '/dashboard/allusers',
-                element: <AllUsers></AllUsers>
+                element: <AdminRoutes><AllUsers></AllUsers></AdminRoutes>
             }
 
         ]
