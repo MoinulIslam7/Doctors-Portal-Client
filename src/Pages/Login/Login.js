@@ -33,6 +33,7 @@ const Login = () => {
     if(token){
         return navigate(from, {replace: true});
     }
+    
 
     return (
         <div className='h-[800px] flex justify-center items-center'>
